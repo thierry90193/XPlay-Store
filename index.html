@@ -2,8 +2,77 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>XPlay Store</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      color: #333;
+    }
+    button {
+      padding: 8px 15px;
+      margin: 10px 0;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .formulario {
+      margin: 20px auto;
+      padding: 15px;
+      background: #fff;
+      border-radius: 10px;
+      max-width: 400px;
+      display: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .formulario input {
+      width: 90%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .loja {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .game-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px;
+      width: 200px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .game-card h3 {
+      margin: 10px 0 5px 0;
+    }
+    .game-card p {
+      margin: 5px 0;
+    }
+    .game-card a {
+      color: #2196F3;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .game-card a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
@@ -14,7 +83,7 @@
 
 <div id="formulario" class="formulario">
   <input type="text" id="nome" placeholder="Nome do jogo">
-  <input type="text" id="imagem" placeholder="URL da imagem">
+  <input type="text" id="link" placeholder="URL link do jogo">
   <input type="text" id="preco" placeholder="Preço">
   <button onclick="criarJogo()">Criar</button>
 </div>
@@ -22,6 +91,39 @@
 <h2>🔥 Loja</h2>
 <div id="loja" class="loja"></div>
 
-<script src="script.js"></script>
+<script>
+function mostrarFormulario() {
+    const form = document.getElementById('formulario');
+    form.style.display = form.style.display === 'block' ? 'none' : 'block';
+}
+
+function criarJogo() {
+    const nome = document.getElementById('nome').value;
+    const link = document.getElementById('link').value;
+    const preco = document.getElementById('preco').value;
+
+    if (!nome || !link || !preco) {
+        alert('Preencha todos os campos!');
+        return;
+    }
+
+    const loja = document.getElementById('loja');
+
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.innerHTML = `
+        <h3>${nome}</h3>
+        <p>Preço: ${preco}</p>
+        <p><a href="${link}" target="_blank">Acessar jogo</a></p>
+    `;
+
+    loja.appendChild(card);
+
+    document.getElementById('nome').value = '';
+    document.getElementById('link').value = '';
+    document.getElementById('preco').value = '';
+}
+</script>
+
 </body>
 </html>
