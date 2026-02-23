@@ -7,19 +7,20 @@
 </head>
 <body>
 
-<h1>🎮 XPlay Store</h1>
+<header>
+  <h1>🎮 XPlay Store</h1>
+  <button onclick="mostrarFormulario()">+ Criar Jogo</button>
+</header>
 
-<button onclick="mostrarFormulario()">➕ Criar Jogo</button>
-
-<div id="formulario" style="display:none;">
+<div id="formulario" class="formulario">
   <input type="text" id="nome" placeholder="Nome do jogo">
   <input type="text" id="imagem" placeholder="URL da imagem">
   <input type="text" id="preco" placeholder="Preço">
   <button onclick="criarJogo()">Criar</button>
 </div>
 
-<h2>🕹️ Loja</h2>
-<div id="loja"></div>
+<h2>🔥 Loja</h2>
+<div id="loja" class="loja"></div>
 
 <script src="script.js"></script>
 </body>
