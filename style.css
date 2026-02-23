@@ -1,0 +1,38 @@
+body {
+  background: #1b2838;
+  color: white;
+  font-family: Arial;
+}
+
+header {
+  background: #171a21;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.loja {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.jogo {
+  background: #2a475e;
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.jogo img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.formulario {
+  display: none;
+  text-align: center;
+  margin: 10px;
+}
