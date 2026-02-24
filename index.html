@@ -1,157 +1,122 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XPlay STORE</title>
-<style>
-  body {
-    background-color: #171a21;
-    color: #c7d5e0;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
-  }
-  header h1 {
-    color: #66c0f4;
-    margin: 0;
-    font-size: 2.2em;
-    font-weight: bold;
-  }
-  button {
-    padding: 8px 15px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 5px;
-    background-color: #66c0f4;
-    color: #000;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  button:hover { background-color: #417a9b; }
-  .formulario {
-    margin: 20px auto;
-    padding: 15px;
-    max-width: 400px;
-    border-radius: 10px;
-    background-color: #1b2838;
-    display: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  }
-  .formulario input {
-    width: 90%;
-    padding: 8px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 1px solid #2a475e;
-    background-color: #0b1b2b;
-    color: #c7d5e0;
-  }
-  .loja {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .game-card {
-    background-color: #1b2838;
-    border: 1px solid #2a475e;
-    border-radius: 10px;
-    padding: 15px;
-    margin: 10px;
-    width: 200px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    text-align: center;
-  }
-  .game-card h3 { margin: 10px 0 5px; color: #c7d5e0; }
-  .game-card p { margin: 5px 0; }
-  .game-card a {
-    color: #66c0f4;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  .game-card a:hover { text-decoration: underline; }
-</style>
+  <meta charset="UTF-8">
+  <title>XPlay STORE</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      background-color: #171a21;
+      color: #c7d5e0;
+      font-family: Arial;
+      text-align: center;
+    }
+
+    h1 {
+      color: #66c0f4;
+    }
+
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 250px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #66c0f4;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .game {
+      background: #1b2838;
+      margin: 10px auto;
+      padding: 10px;
+      width: 250px;
+      border-radius: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>🎮 XPlay STORE</h1>
-  <button onclick="mostrarFormulario()">+ Criar Jogo</button>
-</header>
+<h1>🎮 XPlay STORE</h1>
 
-<div id="formulario" class="formulario">
-  <input type="text" id="nome" placeholder="Nome do jogo">
-  <input type="text" id="link" placeholder="URL link do jogo">
-  <input type="text" id="preco" placeholder="Preço">
-  <button onclick="criarJogo()">Criar</button>
-</div>
+<input id="nome" placeholder="Nome do jogo">
+<input id="link" placeholder="Link do jogo">
+<input id="preco" placeholder="Preço">
+
+<button onclick="criarJogo()">Criar</button>
 
 <h2>🔥 Loja</h2>
-<div id="loja" class="loja"></div>
-
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<div id="loja"></div>
 
 <script>
-  // ======= COLE SUA CONFIGURAÇÃO DO FIREBASE AQUI =======
-  const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "SEU_AUTH_DOMAIN",
-    projectId: "SEU_PROJECT_ID",
-    storageBucket: "SEU_BUCKET",
-    messagingSenderId: "SEU_SENDER_ID",
-    appId: "SEU_APP_ID"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  // =====================================================
+  // 🔥 CONEXÃO SUPABASE
+  const supabase = window.supabase.createClient(
+    "https://djhfewzjkwdxotvrqeby.supabase.co",
+    "SUA_KEY_AQUI"
+  );
 
-  const loja = document.getElementById('loja');
-
-  function mostrarFormulario() {
-    const form = document.getElementById('formulario');
-    form.style.display = form.style.display === 'block' ? 'none' : 'block';
-  }
-
-  function criarJogo() {
-    const nome = document.getElementById('nome').value;
-    const link = document.getElementById('link').value;
-    const preco = document.getElementById('preco').value;
+  // 📦 CRIAR JOGO (SALVAR NO BANCO)
+  async function criarJogo() {
+    const nome = document.getElementById("nome").value;
+    const link = document.getElementById("link").value;
+    const preco = document.getElementById("preco").value;
 
     if (!nome || !link || !preco) {
-      alert('Preencha todos os campos!');
+      alert("Preenche tudo!");
       return;
     }
 
-    db.collection("jogos").add({
-      nome: nome,
-      link: link,
-      preco: preco
-    }).then(() => {
-      document.getElementById('nome').value = '';
-      document.getElementById('link').value = '';
-      document.getElementById('preco').value = '';
-      alert("Jogo enviado com sucesso!");
+    const { error } = await supabase
+      .from("games")
+      .insert([{ name: nome, link: link, price: preco }]);
+
+    if (error) {
+      alert("Erro: " + error.message);
+    } else {
+      alert("Jogo salvo!");
+      carregarJogos();
+    }
+  }
+
+  // 🎮 MOSTRAR JOGOS
+  async function carregarJogos() {
+    const loja = document.getElementById("loja");
+    loja.innerHTML = "";
+
+    const { data, error } = await supabase
+      .from("games")
+      .select("*");
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    data.forEach(jogo => {
+      const div = document.createElement("div");
+      div.className = "game";
+
+      div.innerHTML = `
+        <h3>${jogo.name}</h3>
+        <p>Preço: ${jogo.price}</p>
+        <a href="${jogo.link}" target="_blank">Acessar</a>
+      `;
+
+      loja.appendChild(div);
     });
   }
 
-  function mostrarJogo(doc) {
-    const data = doc.data();
-    const card = document.createElement('div');
-    card.className = 'game-card';
-    card.innerHTML = `
-      <h3>${data.nome}</h3>
-      <p>Preço: ${data.preco}</p>
-      <p><a href="${data.link}" target="_blank">Acessar jogo</a></p>
-    `;
-    loja.appendChild(card);
-  }
-
-  db.collection("jogos").onSnapshot((snapshot) => {
-    loja.innerHTML = '';
-    snapshot.forEach(doc => mostrarJogo(doc));
-  });
+  // 🚀 CARREGAR AO ABRIR O SITE
+  carregarJogos();
 </script>
 
 </body>
