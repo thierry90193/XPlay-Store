@@ -1,83 +1,55 @@
 body {
-  background-color: #171a21; /* Fundo Steam escuro */
-  color: #c7d5e0; /* Texto suave */
+  margin: 0;
   font-family: Arial, sans-serif;
+  background-color: #171a21;
+  color: #c7d5e0;
   text-align: center;
+}
+
+header {
+  background-color: #1b2838;
   padding: 20px;
 }
 
-header h1 {
-  color: #66c0f4; /* Azul Steam */
+h1 {
+  color: #66c0f4;
   margin: 0;
-  font-size: 2em;
-  font-weight: bold;
 }
 
-/* Botões */
-button {
-  padding: 8px 15px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 5px;
-  background-color: #66c0f4; /* Azul Steam */
-  color: #000;
-  cursor: pointer;
-  font-weight: bold;
-}
-button:hover {
-  background-color: #417a9b;
+h2 {
+  margin-top: 20px;
 }
 
-/* Formulário */
-.formulario {
-  margin: 20px auto;
-  padding: 15px;
-  max-width: 400px;
-  border-radius: 10px;
-  background-color: #1b2838; /* Card escuro estilo Steam */
-  display: none;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-}
-.formulario input {
-  width: 90%;
-  padding: 8px;
-  margin: 5px 0;
-  border-radius: 5px;
-  border: 1px solid #2a475e;
-  background-color: #0b1b2b;
-  color: #c7d5e0;
-}
-
-/* Loja de jogos */
-.loja {
+.games-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-/* Cards dos jogos */
 .game-card {
   background-color: #1b2838;
   border: 1px solid #2a475e;
   border-radius: 10px;
   padding: 15px;
   margin: 10px;
-  width: 200px;
+  width: 220px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-  text-align: center;
 }
+
 .game-card h3 {
-  margin: 10px 0 5px 0;
-  color: #c7d5e0;
+  margin: 10px 0;
 }
-.game-card p {
-  margin: 5px 0;
-}
-.game-card a {
-  color: #66c0f4;
-  text-decoration: none;
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #66c0f4;
+  color: black;
+  cursor: pointer;
   font-weight: bold;
 }
-.game-card a:hover {
-  text-decoration: underline;
+
+button:hover {
+  background-color: #417a9b;
 }
