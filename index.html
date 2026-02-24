@@ -2,122 +2,20 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>XPlay STORE</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    body {
-      background-color: #171a21;
-      color: #c7d5e0;
-      font-family: Arial;
-      text-align: center;
-    }
-
-    h1 {
-      color: #66c0f4;
-    }
-
-    input {
-      display: block;
-      margin: 10px auto;
-      padding: 10px;
-      width: 250px;
-      border-radius: 5px;
-      border: none;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #66c0f4;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .game {
-      background: #1b2838;
-      margin: 10px auto;
-      padding: 10px;
-      width: 250px;
-      border-radius: 10px;
-    }
-  </style>
+  <title>XPlay Store</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>🎮 XPlay STORE</h1>
+  <header>
+    <h1>🎮 XPlay Store</h1>
+  </header>
 
-<input id="nome" placeholder="Nome do jogo">
-<input id="link" placeholder="Link do jogo">
-<input id="preco" placeholder="Preço">
+  <main>
+    <h2>🔥 Loja</h2>
+    <div id="games" class="games-container"></div>
+  </main>
 
-<button onclick="criarJogo()">Criar</button>
-
-<h2>🔥 Loja</h2>
-<div id="loja"></div>
-
-<script>
-  // 🔥 CONEXÃO SUPABASE
-  const supabase = window.supabase.createClient(
-    "https://djhfewzjkwdxotvrqeby.supabase.co",
-    "SUA_KEY_AQUI"
-  );
-
-  // 📦 CRIAR JOGO (SALVAR NO BANCO)
-  async function criarJogo() {
-    const nome = document.getElementById("nome").value;
-    const link = document.getElementById("link").value;
-    const preco = document.getElementById("preco").value;
-
-    if (!nome || !link || !preco) {
-      alert("Preenche tudo!");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("games")
-      .insert([{ name: nome, link: link, price: preco }]);
-
-    if (error) {
-      alert("Erro: " + error.message);
-    } else {
-      alert("Jogo salvo!");
-      carregarJogos();
-    }
-  }
-
-  // 🎮 MOSTRAR JOGOS
-  async function carregarJogos() {
-    const loja = document.getElementById("loja");
-    loja.innerHTML = "";
-
-    const { data, error } = await supabase
-      .from("games")
-      .select("*");
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-
-    data.forEach(jogo => {
-      const div = document.createElement("div");
-      div.className = "game";
-
-      div.innerHTML = `
-        <h3>${jogo.name}</h3>
-        <p>Preço: ${jogo.price}</p>
-        <a href="${jogo.link}" target="_blank">Acessar</a>
-      `;
-
-      loja.appendChild(div);
-    });
-  }
-
-  // 🚀 CARREGAR AO ABRIR O SITE
-  carregarJogos();
-</script>
-
+  <script type="module" src="script.js"></script>
 </body>
 </html>
