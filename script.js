@@ -1,39 +1,36 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-// 🔥 CONFIG SUPABASE
+// 🔥 SUPABASE
 const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
 const supabaseKey = 'SUA_PUBLISHABLE_KEY_AQUI'
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// 👤 usuário fake (depois melhoramos isso)
+// 👤 usuário fake
 const userId = "user123"
 
-// 🎮 LISTA DE JOGOS (VOCÊ PODE ADICIONAR MAIS)
+// 🎮 JOGOS (ATUALIZADO PREÇO)
 const games = [
   {
     id: 1,
     name: "The Box of Fear",
-    price: 10,
+    price: 36.21,
     link: "https://escapebox.itch.io/the-box-of-fear"
-  },
-  {
-    id: 2,
-    name: "Jogo Teste",
-    price: 5,
-    link: "https://google.com"
   }
 ]
 
-// 🚀 CARREGAR JOGOS
-async function loadGames() {
+// 🚀 CARREGAR TUDO
+async function carregarTudo() {
   const { data: purchases } = await supabase
     .from('purchases')
     .select('*')
     .eq('user_id', userId)
 
-  const container = document.getElementById("games")
-  container.innerHTML = ""
+  const store = document.getElementById("store")
+  const library = document.getElementById("library")
+
+  store.innerHTML = ""
+  library.innerHTML = ""
 
   games.forEach(game => {
     const comprado = purchases?.find(p => p.game_id == game.id)
@@ -44,7 +41,7 @@ async function loadGames() {
     card.innerHTML = `
       <h3>${game.name}</h3>
       <p>Preço: R$${game.price}</p>
-      <button id="btn-${game.id}">
+      <button>
         ${comprado ? "Acessar" : "Comprar"}
       </button>
     `
@@ -53,11 +50,11 @@ async function loadGames() {
 
     if (comprado) {
       button.onclick = () => acessarJogo(game.link)
+      library.appendChild(card)
     } else {
       button.onclick = () => comprarJogo(game.id)
+      store.appendChild(card)
     }
-
-    container.appendChild(card)
   })
 }
 
@@ -73,13 +70,13 @@ async function comprarJogo(gameId) {
     ])
 
   if (error) {
-    alert("Erro ao comprar!")
+    alert("Erro!")
     console.log(error)
     return
   }
 
-  alert("Compra realizada! 💰🔥")
-  loadGames()
+  alert("Compra feita! 💰🔥")
+  carregarTudo()
 }
 
 // 🎮 ACESSAR
@@ -87,5 +84,5 @@ function acessarJogo(link) {
   window.open(link, "_blank")
 }
 
-// 🚀 INICIAR
-loadGames()
+// 🚀 START
+carregarTudo()
