@@ -1,67 +1,104 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+// 🔗 SUA CONFIG
 const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
-const supabaseKey = 'COLE_SUA_ANON_KEY_AQUI'
+const supabaseKey = 'COLE_SUA_CHAVE_ANON_AQUI'
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-// CADASTRAR
-async function cadastrar() {
-  const email = document.getElementById('email').value
-  const password = document.getElementById('password').value
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password
+// 👤 LOGIN SIMPLES
+async function login(email) {
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email: email
   })
 
   if (error) {
-    alert('Erro: ' + error.message)
+    alert('Erro no login 😢')
   } else {
-    alert('Conta criada!')
+    alert('Verifique seu email 📩')
   }
 }
 
-// LOGIN
-async function login() {
-  const email = document.getElementById('email').value
-  const password = document.getElementById('password').value
+// 📥 PEGAR USUÁRIO
+async function getUser() {
+  const { data } = await supabase.auth.getUser()
+  return data.user
+}
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  })
+// 🛒 COMPRAR JOGO
+async function comprarJogo(nome, link) {
+  const user = await getUser()
+
+  if (!user) {
+    alert('Faça login primeiro!')
+    return
+  }
+
+  const { error } = await supabase
+    .from('biblioteca')
+    .insert([
+      {
+        user_id: user.id,
+        nome: nome,
+        link: link
+      }
+    ])
 
   if (error) {
-    alert('Erro: ' + error.message)
+    alert('Erro ao comprar 😢')
   } else {
-    alert('Logado!')
-    verificarCompra()
+    alert('Comprado com sucesso 🎉')
+    carregarBiblioteca()
   }
 }
 
-// LOGOUT
-async function logout() {
-  await supabase.auth.signOut()
-  alert('Saiu da conta')
+// 📚 CARREGAR BIBLIOTECA
+async function carregarBiblioteca() {
+  const user = await getUser()
+
+  if (!user) return
+
+  const { data, error } = await supabase
+    .from('biblioteca')
+    .select('*')
+    .eq('user_id', user.id)
+
+  const div = document.getElementById('biblioteca')
+  div.innerHTML = ''
+
+  data.forEach(jogo => {
+    const item = document.createElement('div')
+
+    item.innerHTML = `
+      <h3>${jogo.nome}</h3>
+      <a href="${jogo.link}" target="_blank">
+        <button>Acessar</button>
+      </a>
+    `
+
+    div.appendChild(item)
+  })
 }
 
-// COMPRAR JOGO
-function comprarJogo() {
-  localStorage.setItem('comprou_box', 'true')
-  alert('Jogo comprado!')
-  verificarCompra()
+// 🔘 BOTÃO COMPRAR
+function setupBotoes() {
+  const botoes = document.querySelectorAll('.btn-comprar')
+
+  botoes.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const nome = btn.dataset.nome
+      const link = btn.dataset.link
+
+      comprarJogo(nome, link)
+    })
+  })
 }
 
-// VERIFICAR SE COMPROU
-function verificarCompra() {
-  const comprou = localStorage.getItem('comprou_box')
-  const btn = document.getElementById('btn-game')
-
-  if (comprou === 'true') {
-    btn.innerText = 'Acessar'
-  } else {
-    btn.innerText = 'Comprar'
-  }
+// 🚀 INICIAR
+window.onload = () => {
+  setupBotoes()
+  carregarBiblioteca()
 }
 
-// AO ABRIR O SITE
-window.onload = verificarCompra
+// 🌍 deixa global (pra usar no HTML)
+window.login = login
