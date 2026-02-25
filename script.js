@@ -1,104 +1,113 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-// 🔗 SUA CONFIG
 const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
-const supabaseKey = 'COLE_SUA_CHAVE_ANON_AQUI'
+const supabaseKey = 'SUA_ANON_KEY_AQUI'
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-// 👤 LOGIN SIMPLES
-async function login(email) {
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email: email
+// MOSTRAR FORM
+function mostrarFormulario() {
+  document.getElementById("form").style.display = "block"
+}
+
+// CRIAR JOGO (simples local)
+let jogos = []
+
+function criarJogo() {
+  const nome = document.getElementById("nome").value
+  const link = document.getElementById("link").value
+  const preco = document.getElementById("preco").value
+
+  const jogo = { nome, link, preco }
+
+  jogos.push(jogo)
+  renderJogos()
+}
+
+// RENDER
+function renderJogos() {
+  const div = document.getElementById("biblioteca")
+  div.innerHTML = ""
+
+  jogos.forEach(jogo => {
+    const card = document.createElement("div")
+    card.className = "card"
+
+    const botao = document.createElement("button")
+
+    botao.innerText = "Comprar"
+
+    botao.onclick = () => comprarJogo(jogo)
+
+    card.innerHTML = `
+      <h3>${jogo.nome}</h3>
+      <p>Preço: R$ ${jogo.preco}</p>
+    `
+
+    card.appendChild(botao)
+    div.appendChild(card)
   })
-
-  if (error) {
-    alert('Erro no login 😢')
-  } else {
-    alert('Verifique seu email 📩')
-  }
 }
 
-// 📥 PEGAR USUÁRIO
-async function getUser() {
-  const { data } = await supabase.auth.getUser()
-  return data.user
-}
+// COMPRAR JOGO
+async function comprarJogo(jogo) {
 
-// 🛒 COMPRAR JOGO
-async function comprarJogo(nome, link) {
-  const user = await getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    alert('Faça login primeiro!')
+    alert("Faça login primeiro!")
     return
   }
 
+  // salva no banco
   const { error } = await supabase
-    .from('biblioteca')
+    .from("biblioteca")
     .insert([
       {
         user_id: user.id,
-        nome: nome,
-        link: link
+        nome: jogo.nome,
+        link: jogo.link
       }
     ])
 
   if (error) {
-    alert('Erro ao comprar 😢')
-  } else {
-    alert('Comprado com sucesso 🎉')
-    carregarBiblioteca()
+    alert("Erro ao comprar")
+    console.log(error)
+    return
   }
+
+  alert("Comprado!")
+
+  carregarBiblioteca()
 }
 
-// 📚 CARREGAR BIBLIOTECA
+// CARREGAR BIBLIOTECA
 async function carregarBiblioteca() {
-  const user = await getUser()
+
+  const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) return
 
-  const { data, error } = await supabase
-    .from('biblioteca')
-    .select('*')
-    .eq('user_id', user.id)
+  const { data } = await supabase
+    .from("biblioteca")
+    .select("*")
+    .eq("user_id", user.id)
 
-  const div = document.getElementById('biblioteca')
-  div.innerHTML = ''
+  const div = document.getElementById("biblioteca")
+  div.innerHTML = ""
 
   data.forEach(jogo => {
-    const item = document.createElement('div')
+    const card = document.createElement("div")
+    card.className = "card"
 
-    item.innerHTML = `
+    card.innerHTML = `
       <h3>${jogo.nome}</h3>
       <a href="${jogo.link}" target="_blank">
         <button>Acessar</button>
       </a>
     `
 
-    div.appendChild(item)
+    div.appendChild(card)
   })
 }
 
-// 🔘 BOTÃO COMPRAR
-function setupBotoes() {
-  const botoes = document.querySelectorAll('.btn-comprar')
-
-  botoes.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const nome = btn.dataset.nome
-      const link = btn.dataset.link
-
-      comprarJogo(nome, link)
-    })
-  })
-}
-
-// 🚀 INICIAR
-window.onload = () => {
-  setupBotoes()
-  carregarBiblioteca()
-}
-
-// 🌍 deixa global (pra usar no HTML)
-window.login = login
+// CARREGA AO ABRIR
+carregarBiblioteca()
