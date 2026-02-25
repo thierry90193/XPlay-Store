@@ -1,88 +1,67 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-// 🔥 SUPABASE
 const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
-const supabaseKey = 'SUA_PUBLISHABLE_KEY_AQUI'
+const supabaseKey = 'COLE_SUA_ANON_KEY_AQUI'
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-// 👤 usuário fake
-const userId = "user123"
+// CADASTRAR
+async function cadastrar() {
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
 
-// 🎮 JOGOS (ATUALIZADO PREÇO)
-const games = [
-  {
-    id: 1,
-    name: "The Box of Fear",
-    price: 36.21,
-    link: "https://escapebox.itch.io/the-box-of-fear"
-  }
-]
-
-// 🚀 CARREGAR TUDO
-async function carregarTudo() {
-  const { data: purchases } = await supabase
-    .from('purchases')
-    .select('*')
-    .eq('user_id', userId)
-
-  const store = document.getElementById("store")
-  const library = document.getElementById("library")
-
-  store.innerHTML = ""
-  library.innerHTML = ""
-
-  games.forEach(game => {
-    const comprado = purchases?.find(p => p.game_id == game.id)
-
-    const card = document.createElement("div")
-    card.className = "game-card"
-
-    card.innerHTML = `
-      <h3>${game.name}</h3>
-      <p>Preço: R$${game.price}</p>
-      <button>
-        ${comprado ? "Acessar" : "Comprar"}
-      </button>
-    `
-
-    const button = card.querySelector("button")
-
-    if (comprado) {
-      button.onclick = () => acessarJogo(game.link)
-      library.appendChild(card)
-    } else {
-      button.onclick = () => comprarJogo(game.id)
-      store.appendChild(card)
-    }
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password
   })
-}
-
-// 💸 COMPRAR
-async function comprarJogo(gameId) {
-  const { error } = await supabase
-    .from('purchases')
-    .insert([
-      {
-        user_id: userId,
-        game_id: gameId
-      }
-    ])
 
   if (error) {
-    alert("Erro!")
-    console.log(error)
-    return
+    alert('Erro: ' + error.message)
+  } else {
+    alert('Conta criada!')
   }
-
-  alert("Compra feita! 💰🔥")
-  carregarTudo()
 }
 
-// 🎮 ACESSAR
-function acessarJogo(link) {
-  window.open(link, "_blank")
+// LOGIN
+async function login() {
+  const email = document.getElementById('email').value
+  const password = document.getElementById('password').value
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    alert('Erro: ' + error.message)
+  } else {
+    alert('Logado!')
+    verificarCompra()
+  }
 }
 
-// 🚀 START
-carregarTudo()
+// LOGOUT
+async function logout() {
+  await supabase.auth.signOut()
+  alert('Saiu da conta')
+}
+
+// COMPRAR JOGO
+function comprarJogo() {
+  localStorage.setItem('comprou_box', 'true')
+  alert('Jogo comprado!')
+  verificarCompra()
+}
+
+// VERIFICAR SE COMPROU
+function verificarCompra() {
+  const comprou = localStorage.getItem('comprou_box')
+  const btn = document.getElementById('btn-game')
+
+  if (comprou === 'true') {
+    btn.innerText = 'Acessar'
+  } else {
+    btn.innerText = 'Comprar'
+  }
+}
+
+// AO ABRIR O SITE
+window.onload = verificarCompra
