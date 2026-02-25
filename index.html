@@ -7,28 +7,20 @@
 </head>
 <body>
 
-  <h1>🎮 XPlay Store</h1>
+  <h1>🎮 XPlay STORE</h1>
 
-  <!-- LOGIN / CADASTRO -->
-  <div class="login-box">
-    <h2>Login / Cadastro</h2>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Senha">
-    <button onclick="cadastrar()">Cadastrar</button>
-    <button onclick="login()">Entrar</button>
-    <button onclick="logout()">Sair</button>
+  <button onclick="mostrarFormulario()">+ Criar Jogo</button>
+
+  <div id="form" style="display:none;">
+    <input id="nome" placeholder="Nome do jogo">
+    <input id="link" placeholder="Link do jogo">
+    <input id="preco" placeholder="Preço">
+    <button onclick="criarJogo()">Criar</button>
   </div>
 
-  <!-- BIBLIOTECA -->
-  <h2>📚 Biblioteca</h2>
+  <h2>🔥 Biblioteca</h2>
+  <div id="biblioteca"></div>
 
-  <div class="game">
-    <h3>The Box of Fear</h3>
-    <p>R$ 36,21</p>
-    <button id="btn-game" onclick="comprarJogo()">Comprar</button>
-  </div>
-
-  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="script.js"></script>
 
