@@ -1,27 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <title>XPlay Store</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <h1>🎮 XPlay STORE</h1>
+  <h1>🎮 XPlay Store</h1>
 
-  <button onclick="mostrarFormulario()">+ Criar Jogo</button>
+  <input id="nome" placeholder="Nome do jogo">
+  <input id="link" placeholder="Link do jogo">
+  <button onclick="salvarJogo()">Criar jogo</button>
 
-  <div id="form" style="display:none;">
-    <input id="nome" placeholder="Nome do jogo">
-    <input id="link" placeholder="Link do jogo">
-    <input id="preco" placeholder="Preço">
-    <button onclick="criarJogo()">Criar</button>
-  </div>
+  <h2>Jogos</h2>
+  <div id="lista"></div>
 
-  <h2>🔥 Biblioteca</h2>
-  <div id="biblioteca"></div>
-
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <!-- SEU SCRIPT -->
   <script src="script.js"></script>
 
 </body>
