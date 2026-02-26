@@ -3,33 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>XPlay Store</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
+
 <body>
 
-<h1>XPlay Store 🎮</h1>
+  <h1>🎮 XPlay Store</h1>
 
-<!-- LOGIN -->
-<h2>Login</h2>
-<input id="email" placeholder="Email">
-<input id="senha" type="password" placeholder="Senha">
-<button onclick="login()">Entrar</button>
+  <button onclick="criarJogo()">Criar Jogo</button>
 
-<hr>
+  <div id="jogos"></div>
 
-<!-- ADICIONAR JOGO -->
-<h2>Adicionar Jogo</h2>
-<input id="nome" placeholder="Nome do jogo">
-<input id="link" placeholder="Link do jogo">
-<button onclick="salvarJogo()">Salvar</button>
-
-<hr>
-
-<!-- LISTA -->
-<h2>Jogos</h2>
-<div id="lista"></div>
-
-<!-- SCRIPT -->
-<script type="module" src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
