@@ -1,19 +1,31 @@
 body {
-  background: #1b2838;
-  color: white;
+  background: #171a21;
+  color: #c7d5e0;
   font-family: Arial;
   text-align: center;
 }
 
-#games {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+button {
+  background: #66c0f4;
+  border: none;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
 }
 
-.game {
-  background: #2a475e;
-  padding: 15px;
+.form {
+  display: none;
+  margin: 20px;
+}
+
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+}
+
+.card {
+  background: #1b2838;
+  padding: 10px;
   margin: 10px;
-  border-radius: 10px;
 }
