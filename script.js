@@ -1,65 +1,30 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-// 🔑 COLOCA AQUI OS SEUS DADOS
-const supabaseUrl = 'https://SEU-PROJETO.supabase.co'
+const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
 const supabaseKey = 'SUA_CHAVE_AQUI'
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-console.log("SITE RODANDO 🔥")
+async function criarJogo() {
+  const nome = prompt("Nome do jogo:")
+  const link = prompt("Link do jogo:")
 
-// 🔐 LOGIN
-window.login = async function () {
-  const email = document.getElementById('email').value
-  const senha = document.getElementById('senha').value
+  if (!nome || !link) return
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: senha
-  })
+  const { error } = await supabase
+    .from('biblioteca')
+    .insert([{ nome, link }])
 
   if (error) {
-    alert('Erro no login ❌')
+    alert("Erro ao salvar")
     console.log(error)
   } else {
-    alert('Logado com sucesso ✅')
+    alert("Jogo criado!")
     carregarJogos()
   }
 }
 
-// 💾 SALVAR JOGO
-window.salvarJogo = async function () {
-  const nome = document.getElementById('nome').value
-  const link = document.getElementById('link').value
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    alert('Você precisa logar primeiro ❌')
-    return
-  }
-
-  const { error } = await supabase.from('games').insert([
-    {
-      nome: nome,
-      link: link,
-      user_id: user.id
-    }
-  ])
-
-  if (error) {
-    alert('Erro ao salvar ❌')
-    console.log(error)
-  } else {
-    alert('Jogo salvo! 🎮')
-    carregarJogos()
-  }
-}
-
-// 📦 LISTAR JOGOS
 async function carregarJogos() {
   const { data, error } = await supabase
-    .from('games')
+    .from('biblioteca')
     .select('*')
 
   if (error) {
@@ -67,18 +32,17 @@ async function carregarJogos() {
     return
   }
 
-  const lista = document.getElementById('lista')
-  lista.innerHTML = ''
+  const div = document.getElementById("jogos")
+  div.innerHTML = ""
 
   data.forEach(jogo => {
-    lista.innerHTML += `
+    div.innerHTML += `
       <div>
         <h3>${jogo.nome}</h3>
-        <a href="${jogo.link}" target="_blank">Jogar</a>
+        <a href="${jogo.link}" target="_blank">Acessar</a>
       </div>
     `
   })
 }
 
-// 🚀 CARREGA AUTOMÁTICO
 carregarJogos()
