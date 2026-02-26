@@ -1,5 +1,5 @@
 const supabaseUrl = "https://djhfewzjkwdxotvrqeby.supabase.co";
-const supabaseKey = "SUA_CHAVE_ANON_AQUI";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqaGZld3pqa3dkeG90dnJxZWJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NjMyNjIsImV4cCI6MjA4NzUzOTI2Mn0.LF02af08wrJDh414Y6HqZPQHMCCtRYVts0xc-HFwrq0";
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
