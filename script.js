@@ -1,48 +1,19 @@
-const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
-const supabaseKey = 'const supabaseKey = 'eyJhbGciOiJIUzI1NiI...''
-
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
-async function criarJogo() {
-  const nome = prompt("Nome do jogo:")
-  const link = prompt("Link do jogo:")
-
-  if (!nome || !link) return
-
-  const { error } = await supabase
-    .from('biblioteca')
-    .insert([{ nome, link }])
-
-  if (error) {
-    alert("Erro ao salvar")
-    console.log(error)
-  } else {
-    alert("Jogo criado!")
-    carregarJogos()
-  }
+body {
+  background: #1b2838;
+  color: white;
+  font-family: Arial;
+  text-align: center;
 }
 
-async function carregarJogos() {
-  const { data, error } = await supabase
-    .from('biblioteca')
-    .select('*')
-
-  if (error) {
-    console.log(error)
-    return
-  }
-
-  const div = document.getElementById("jogos")
-  div.innerHTML = ""
-
-  data.forEach(jogo => {
-    div.innerHTML += `
-      <div>
-        <h3>${jogo.nome}</h3>
-        <a href="${jogo.link}" target="_blank">Acessar</a>
-      </div>
-    `
-  })
+#games {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-carregarJogos()
+.game {
+  background: #2a475e;
+  padding: 15px;
+  margin: 10px;
+  border-radius: 10px;
+}
