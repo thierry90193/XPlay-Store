@@ -1,11 +1,14 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
+// 🔑 COLOCA AQUI OS SEUS DADOS
 const supabaseUrl = 'https://SEU-PROJETO.supabase.co'
 const supabaseKey = 'SUA_CHAVE_AQUI'
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// LOGIN
+console.log("SITE RODANDO 🔥")
+
+// 🔐 LOGIN
 window.login = async function () {
   const email = document.getElementById('email').value
   const senha = document.getElementById('senha').value
@@ -16,40 +19,53 @@ window.login = async function () {
   })
 
   if (error) {
-    alert('Erro no login')
+    alert('Erro no login ❌')
+    console.log(error)
   } else {
-    alert('Logado com sucesso!')
+    alert('Logado com sucesso ✅')
     carregarJogos()
   }
 }
 
-// SALVAR JOGO
+// 💾 SALVAR JOGO
 window.salvarJogo = async function () {
   const nome = document.getElementById('nome').value
   const link = document.getElementById('link').value
 
-  const user = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    alert('Você precisa logar primeiro ❌')
+    return
+  }
 
   const { error } = await supabase.from('games').insert([
     {
       nome: nome,
       link: link,
-      user_id: user.data.user.id
+      user_id: user.id
     }
   ])
 
   if (error) {
-    alert('Erro ao salvar')
+    alert('Erro ao salvar ❌')
     console.log(error)
   } else {
-    alert('Jogo salvo!')
+    alert('Jogo salvo! 🎮')
     carregarJogos()
   }
 }
 
-// LISTAR JOGOS
+// 📦 LISTAR JOGOS
 async function carregarJogos() {
-  const { data, error } = await supabase.from('games').select('*')
+  const { data, error } = await supabase
+    .from('games')
+    .select('*')
+
+  if (error) {
+    console.log(error)
+    return
+  }
 
   const lista = document.getElementById('lista')
   lista.innerHTML = ''
@@ -64,5 +80,5 @@ async function carregarJogos() {
   })
 }
 
-// AUTO CARREGAR
+// 🚀 CARREGA AUTOMÁTICO
 carregarJogos()
