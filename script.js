@@ -1,72 +1,68 @@
-// 🔗 CONFIG SUPABASE
-const SUPABASE_URL = "https://djhfewzjkwdxotvrqeby.supabase.co";
-const SUPABASE_KEY = "SUA_ANON_KEY_AQUI";
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseUrl = 'https://SEU-PROJETO.supabase.co'
+const supabaseKey = 'SUA_CHAVE_AQUI'
 
-// 👤 LOGIN ANÔNIMO
-async function loginAnonimo() {
-  const { data, error } = await supabase.auth.signInAnonymously();
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+// LOGIN
+window.login = async function () {
+  const email = document.getElementById('email').value
+  const senha = document.getElementById('senha').value
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: senha
+  })
+
   if (error) {
-    console.error("Erro no login:", error);
+    alert('Erro no login')
   } else {
-    console.log("Logado:", data);
+    alert('Logado com sucesso!')
+    carregarJogos()
   }
 }
 
-// 🚀 CHAMA LOGIN AUTOMÁTICO
-loginAnonimo();
+// SALVAR JOGO
+window.salvarJogo = async function () {
+  const nome = document.getElementById('nome').value
+  const link = document.getElementById('link').value
 
-// 🎮 SALVAR JOGO
-async function salvarJogo() {
-  const nome = document.getElementById("nome").value;
-  const link = document.getElementById("link").value;
+  const user = await supabase.auth.getUser()
 
-  const user = (await supabase.auth.getUser()).data.user;
-
-  const { error } = await supabase.from("games").insert([
+  const { error } = await supabase.from('games').insert([
     {
-      user_id: user.id,
       nome: nome,
-      link: link
+      link: link,
+      user_id: user.data.user.id
     }
-  ]);
+  ])
 
   if (error) {
-    console.error("Erro ao salvar:", error);
-    alert("Erro ao salvar jogo!");
+    alert('Erro ao salvar')
+    console.log(error)
   } else {
-    alert("Jogo salvo!");
-    carregarJogos();
+    alert('Jogo salvo!')
+    carregarJogos()
   }
 }
 
-// 📦 CARREGAR JOGOS
+// LISTAR JOGOS
 async function carregarJogos() {
-  const lista = document.getElementById("lista");
+  const { data, error } = await supabase.from('games').select('*')
 
-  const { data, error } = await supabase
-    .from("games")
-    .select("*");
-
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  lista.innerHTML = "";
+  const lista = document.getElementById('lista')
+  lista.innerHTML = ''
 
   data.forEach(jogo => {
-    const div = document.createElement("div");
-
-    div.innerHTML = `
-      <h3>${jogo.nome}</h3>
-      <button onclick="window.open('${jogo.link}', '_blank')">Jogar</button>
-    `;
-
-    lista.appendChild(div);
-  });
+    lista.innerHTML += `
+      <div>
+        <h3>${jogo.nome}</h3>
+        <a href="${jogo.link}" target="_blank">Jogar</a>
+      </div>
+    `
+  })
 }
 
-// 🔄 CARREGA AO ABRIR
-window.onload = carregarJogos;
+// AUTO CARREGAR
+carregarJogos()
