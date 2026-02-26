@@ -1,31 +1,51 @@
 body {
-  background: #0f172a;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #171a21;
   color: white;
-  font-family: Arial;
+}
+
+/* topo */
+header {
+  background-color: #1b2838;
+  padding: 15px;
   text-align: center;
+  font-size: 24px;
 }
 
-input {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  width: 200px;
+/* container */
+.container {
+  padding: 20px;
 }
 
+/* cards de jogos */
+.game {
+  background-color: #2a475e;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+
+/* botão */
 button {
-  padding: 10px;
-  margin: 5px;
-  cursor: pointer;
-  background: #3b82f6;
-  color: white;
+  background-color: #66c0f4;
   border: none;
+  padding: 10px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
   border-radius: 5px;
 }
 
-.card {
-  background: #1e293b;
-  padding: 15px;
-  margin: 10px auto;
-  width: 250px;
-  border-radius: 10px;
+button:hover {
+  background-color: #4ea1d3;
+}
+
+/* inputs */
+input {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
 }
