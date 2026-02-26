@@ -1,63 +1,26 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>XPlay Store</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// 🔑 SUAS INFOS
-const supabaseUrl = 'https://djhfewzjkwdxotvrqeby.supabase.co'
-const supabaseKey = 'SUA_ANON_KEY_AQUI'
+<h1>🎮 XPlay Store</h1>
 
-const supabase = createClient(supabaseUrl, supabaseKey)
+<button onclick="mostrarFormulario()">+ Criar Jogo</button>
 
-// MOSTRAR FORM
-window.mostrarFormulario = function () {
-  const form = document.getElementById('formulario')
-  form.style.display = form.style.display === 'block' ? 'none' : 'block'
-}
+<div id="formulario" class="form">
+  <input id="nome" placeholder="Nome do jogo">
+  <input id="link" placeholder="Link do jogo">
+  <input id="preco" placeholder="Preço">
+  <button onclick="criarJogo()">Salvar</button>
+</div>
 
-// CRIAR JOGO
-window.criarJogo = async function () {
-  const nome = document.getElementById('nome').value
-  const link = document.getElementById('link').value
-  const preco = document.getElementById('preco').value
+<h2>📚 Biblioteca</h2>
+<div id="loja"></div>
 
-  if (!nome || !link || !preco) {
-    alert('Preenche tudo!')
-    return
-  }
-
-  await supabase.from('games').insert([
-    { nome, link, preco }
-  ])
-
-  carregarJogos()
-}
-
-// CARREGAR JOGOS
-async function carregarJogos() {
-  const { data } = await supabase.from('games').select('*')
-
-  const loja = document.getElementById('loja')
-  loja.innerHTML = ''
-
-  data.forEach(jogo => {
-    const card = document.createElement('div')
-    card.className = 'card'
-
-    card.innerHTML = `
-      <h3>${jogo.nome}</h3>
-      <p>R$ ${jogo.preco}</p>
-      <button onclick="comprar('${jogo.link}', this)">Comprar</button>
-    `
-
-    loja.appendChild(card)
-  })
-}
-
-// BOTÃO COMPRAR
-window.comprar = function (link, botao) {
-  botao.innerText = 'Acessar'
-  botao.onclick = () => {
-    window.open(link)
-  }
-}
-
-// INICIAR
-carregarJogos()
+<script src="script.js"></script>
+</body>
+</html>
